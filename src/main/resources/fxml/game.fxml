@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.GameController">
+    <children>
+        <Label fx:id="usernameLabel" layoutX="68.0" layoutY="46.0" prefHeight="16.0" prefWidth="565.0" text="Current users: ">
+            <font>
+                <Font name="FreeSerif Bold" size="22.0" />
+            </font>
+        </Label>
+        <Label fx:id="question" alignment="CENTER" contentDisplay="CENTER" layoutX="14.0" layoutY="100.0" prefHeight="48.0" prefWidth="673.0" text="//kérdés">
+            <font>
+                <Font name="FreeSerif" size="18.0" />
+            </font>
+        </Label>
+        <Label layoutX="28.0" layoutY="352.0" prefHeight="20.0" prefWidth="134.0" text="Question number:">
+            <font>
+                <Font name="FreeSerif" size="18.0" />
+            </font>
+        </Label>
+        <Label fx:id="questionNumberDisplay" layoutX="170.0" layoutY="352.0" prefWidth="30">
+            <font>
+                <Font name="FreeSerif" size="18.0" />
+            </font>
+        </Label>
+      <TextField fx:id="useranswer1" layoutX="71.0" layoutY="223.0">
+         <font>
+            <Font name="FreeSans" size="18.0" />
+         </font></TextField>
+      <TextField fx:id="useranswer2" layoutX="410.0" layoutY="223.0">
+         <font>
+            <Font name="FreeSerif" size="18.0" />
+         </font></TextField>
+      <Label fx:id="timeDisplay" layoutX="395.0" layoutY="353.0" prefHeight="20.0" prefWidth="150.0">
+         <font>
+            <Font name="FreeSerif" size="18.0" />
+         </font>
+      </Label>
+        <Label fx:id="answer" alignment="CENTER" contentDisplay="CENTER" layoutX="321.0" layoutY="168.0" prefHeight="20.0" prefWidth="60" text="2344" textOverrun="CENTER_ELLIPSIS">
+            <font>
+                <Font name="FreeSerif" size="18.0" />
+            </font>
+        </Label>
+    </children>
+</Pane>
