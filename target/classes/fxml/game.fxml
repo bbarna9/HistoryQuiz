@@ -11,7 +11,7 @@
                 <Font name="FreeSerif Bold" size="22.0" />
             </font>
         </Label>
-        <Label fx:id="question" alignment="CENTER" contentDisplay="CENTER" layoutX="14.0" layoutY="100.0" prefHeight="89.0" prefWidth="673.0" text="//kérdés">
+        <Label fx:id="questionDisplay" alignment="CENTER" contentDisplay="CENTER" layoutX="14.0" layoutY="100.0" prefHeight="48.0" prefWidth="673.0">
             <font>
                 <Font name="FreeSerif" size="18.0" />
             </font>
@@ -21,12 +21,12 @@
                 <Font name="FreeSerif" size="18.0" />
             </font>
         </Label>
-        <Label fx:id="questionNumberDisplay" layoutX="170.0" layoutY="352.0" prefWidth="30" >
+        <Label fx:id="questionNumberDisplay" layoutX="170.0" layoutY="352.0" prefWidth="30" text="0">
             <font>
                 <Font name="FreeSerif" size="18.0" />
             </font>
         </Label>
-      <TextField fx:id="useranswer1" layoutX="70.0" layoutY="223.0">
+      <TextField fx:id="useranswer1" layoutX="71.0" layoutY="223.0">
          <font>
             <Font name="FreeSans" size="18.0" />
          </font></TextField>
@@ -39,5 +39,10 @@
             <Font name="FreeSerif" size="18.0" />
          </font>
       </Label>
+        <Label fx:id="answerBlock" alignment="CENTER" contentDisplay="CENTER" layoutX="321.0" layoutY="168.0" prefHeight="20.0" prefWidth="60" text="2344" textOverrun="CENTER_ELLIPSIS" visible="false">
+            <font>
+                <Font name="FreeSerif" size="18.0" />
+            </font>
+        </Label>
     </children>
 </Pane>

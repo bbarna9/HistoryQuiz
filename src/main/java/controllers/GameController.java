@@ -1,32 +1,27 @@
 package controllers;
 
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.DocumentBuilder;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.Node;
+import org.w3c.dom.Element;
+import java.io.File;
+import java.util.Random;
 import javafx.util.Duration;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.GridPane;
-import javafx.stage.Stage;
-import lombok.extern.slf4j.Slf4j;
-//import rollingcubes.results.GameResult;
-//import rollingcubes.results.GameResultDao;
-//import rollingcubes.state.RollingCubesState;
 
-import java.io.IOException;
-import java.sql.Time;
+import lombok.extern.slf4j.Slf4j;
+
 import java.time.Instant;
-import java.util.Arrays;
-import java.util.List;
+
 
 @Slf4j
 public class GameController {
@@ -34,13 +29,15 @@ public class GameController {
     private String userName1;
     private String userName2;
     private int questionCount;
-    private List<Image> cubeImages;
     private Instant beginGame;
-    private final int startingTime = 15;
+    private final int startingTime = 5;
     private int seconds = startingTime;
 
     @FXML
-    public Label question;
+    public Label questionDisplay;
+
+    @FXML
+    public Label answerBlock;
 
     @FXML
     private Label usernameLabel;
@@ -53,12 +50,58 @@ public class GameController {
 
     @FXML
     private Button doneButton;
+    private Object ReadXMLFile;
+
+    public String[] XmlReader(int temp){
+        String tempQ = "nm";
+        String tempA = "nm";
+
+        try {
+
+            File fXmlFile = new File("/home/barna/Szoftverfejelsztes/HistoryQuiz/questions.xml");
+            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+            Document doc = dBuilder.parse(fXmlFile);
+            doc.getDocumentElement().normalize();
+
+            System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
+            NodeList nList = doc.getElementsByTagName("element");
+            System.out.println("----------------------------");
+
+            Node nNode = nList.item(temp);
+            System.out.println("\nCurrent Element :" + nNode.getNodeName());
+            if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+                Element eElement = (Element) nNode;
+                System.out.println("Question id : "
+                        + eElement.getAttribute("id"));
+                tempQ = eElement.getElementsByTagName("text")
+                        .item(0).getTextContent();
+                tempA = eElement.getElementsByTagName("answer")
+                        .item(0).getTextContent();
+
+                System.out.println("Question Text : "
+                        + eElement.getElementsByTagName("text")
+                        .item(0).getTextContent());
+                System.out.println("Answer : "
+                        + eElement.getElementsByTagName("answer")
+                        .item(0).getTextContent());
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        String[] selectedQuestion = new String[] {tempQ, tempA};
+        return selectedQuestion;
+    }
 
     public void newQuestion(){
-        questionCount++;
-        int temp = (int)(Math.random()*(70-1)+1);
-        question = new Label();
-        question.setText("kerdes"); //questionList[temp] -> betöltjük a kérdés mezőbe
+        int temp = Integer.parseInt(questionNumberDisplay.getText()) + 1;
+        questionNumberDisplay.setText(Integer.toString(temp));
+        Random random = new Random();
+        int rand = random.nextInt(70);
+        XmlReader(3);
+        questionDisplay.setText(XmlReader(rand)[0]);
+        answerBlock.setText(XmlReader(rand)[1]);
     }
 
     public void initdata(String userName) {
@@ -68,6 +111,7 @@ public class GameController {
     }
 
     public void timer(){
+        answerBlock.setVisible(false);
         Timeline time = new Timeline();
         time.setCycleCount(Timeline.INDEFINITE);
             if(time!=null)
@@ -79,6 +123,9 @@ public class GameController {
                     if (seconds<=0)
                         time.stop();
                 seconds--;
+                if(seconds==-1)
+                    answerBlock.setVisible(true);
+
             }
         });
         time.getKeyFrames().add(frame);
@@ -87,32 +134,27 @@ public class GameController {
 
     @FXML
     public void initialize() {
+        /*
+        for (int i = 0; i<5; i++){
+            newQuestion();
+            timer();
+        }
+        */
+        /*File file = new File("data.json");
 
-        //gameResultDao = GameResultDao.getInstance();
-
-        //gameState = new RollingCubesState();
-
+        if (!file.exists())
+            return;
+*/
         questionCount = 0;
 
         beginGame = Instant.now();
 
         timer();
 
-        //ha a timer 0, az answer opacityjét 0-ról 0-re állítani, amint újrakezdődik vissza 0ra
+        newQuestion();
+
 
     }
 
 
-    /*
-    public void finishGame(ActionEvent actionEvent) throws IOException {
-        if (!gameState.isSolved()) {
-            gameResultDao.persist(getResult());
-        }
-
-        Parent root = FXMLLoader.load(getClass().getResource("/fxml/topten.fxml"));
-        Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-        stage.setScene(new Scene(root));
-        stage.show();
-        log.info("Finished game, loading Top Ten scene.");
-    }*/
 }
