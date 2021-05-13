@@ -1,5 +1,8 @@
 package controllers;
 
+import javafx.scene.control.TextField;
+import models.personalXmlReader;
+
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
 
@@ -9,6 +12,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.Element;
 import java.io.File;
 import java.util.Random;
+import java.time.Instant;
 import javafx.util.Duration;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -20,18 +24,15 @@ import javafx.scene.control.Label;
 
 import lombok.extern.slf4j.Slf4j;
 
-import java.time.Instant;
-
-
 @Slf4j
 public class GameController {
 
     private String userName1;
     private String userName2;
-    private int questionCount;
     private Instant beginGame;
     private final int startingTime = 5;
     private int seconds = startingTime;
+    public personalXmlReader personalxmlreader = new personalXmlReader();
 
     @FXML
     public Label questionDisplay;
@@ -49,69 +50,51 @@ public class GameController {
     private Label timeDisplay;
 
     @FXML
-    private Button doneButton;
-    private Object ReadXMLFile;
+    private TextField useranswer1;
 
-    public String[] XmlReader(int temp){
-        String tempQ = "nm";
-        String tempA = "nm";
+    @FXML
+    private TextField useranswer2;
 
-        try {
-
-            File fXmlFile = new File("/home/barna/Szoftverfejelsztes/HistoryQuiz/questions.xml");
-            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-            Document doc = dBuilder.parse(fXmlFile);
-            doc.getDocumentElement().normalize();
-
-            System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
-            NodeList nList = doc.getElementsByTagName("element");
-            System.out.println("----------------------------");
-
-            Node nNode = nList.item(temp);
-            System.out.println("\nCurrent Element :" + nNode.getNodeName());
-            if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-                Element eElement = (Element) nNode;
-                System.out.println("Question id : "
-                        + eElement.getAttribute("id"));
-                tempQ = eElement.getElementsByTagName("text")
-                        .item(0).getTextContent();
-                tempA = eElement.getElementsByTagName("answer")
-                        .item(0).getTextContent();
-
-                System.out.println("Question Text : "
-                        + eElement.getElementsByTagName("text")
-                        .item(0).getTextContent());
-                System.out.println("Answer : "
-                        + eElement.getElementsByTagName("answer")
-                        .item(0).getTextContent());
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        String[] selectedQuestion = new String[] {tempQ, tempA};
-        return selectedQuestion;
-    }
+    @FXML
+    private Button nextQuestionButton;
 
     public void newQuestion(){
         int temp = Integer.parseInt(questionNumberDisplay.getText()) + 1;
         questionNumberDisplay.setText(Integer.toString(temp));
+
         Random random = new Random();
         int rand = random.nextInt(70);
-        XmlReader(3);
-        questionDisplay.setText(XmlReader(rand)[0]);
-        answerBlock.setText(XmlReader(rand)[1]);
+
+
+
+        String[] data = personalxmlreader.XmlReader(rand);
+        questionDisplay.setText(data[0]);
+        answerBlock.setText(data[1]);
+
+        timer();
     }
 
-    public void initdata(String userName) {
+    public void nextQuestionAsked(){
+        newQuestion();
+        seconds = startingTime;
+        int num = Integer.parseInt(questionNumberDisplay.getText());
+        if(num == 3)
+            nextQuestionButton.setVisible(false);
+    }
+
+    public void initdata(String userName1, String userName2) {
         this.userName1 = userName1;
         this.userName2 = userName2;
         usernameLabel.setText("Current users: " + this.userName1 + " and " + this.userName2);
+
     }
 
     public void timer(){
         answerBlock.setVisible(false);
+
+        useranswer1.setEditable(true);
+        useranswer2.setEditable(true);
+
         Timeline time = new Timeline();
         time.setCycleCount(Timeline.INDEFINITE);
             if(time!=null)
@@ -119,41 +102,33 @@ public class GameController {
         KeyFrame frame = new KeyFrame(Duration.seconds(1), new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                timeDisplay.setText("Time remaining: " + String.valueOf(seconds));
+                timeDisplay.setText(String.valueOf(seconds));
                     if (seconds<=0)
                         time.stop();
                 seconds--;
-                if(seconds==-1)
+                if(seconds==-1) {
                     answerBlock.setVisible(true);
-
+                    useranswer1.setEditable(false);
+                    useranswer2.setEditable(false);
+                }
             }
         });
         time.getKeyFrames().add(frame);
         time.playFromStart();
+
+        seconds = startingTime;
     }
 
     @FXML
     public void initialize() {
-        /*
-        for (int i = 0; i<5; i++){
-            newQuestion();
-            timer();
-        }
-        */
-        /*File file = new File("data.json");
-
-        if (!file.exists())
-            return;
-*/
-        questionCount = 0;
-
-        beginGame = Instant.now();
-
-        timer();
 
         newQuestion();
 
+        beginGame = Instant.now();
 
+        //timer();
+
+        //newQuestion();
     }
 
 

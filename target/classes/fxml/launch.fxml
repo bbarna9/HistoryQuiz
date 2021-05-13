@@ -26,5 +26,10 @@
             </font>
         </Label>
         <TextField fx:id="usernameTextfield2" layoutX="223.0" layoutY="238.0" prefHeight="26.0" prefWidth="158.0" />
+      <Label fx:id="errorLabel" alignment="CENTER" layoutX="84.0" layoutY="269.0" prefHeight="26.0" prefWidth="438.0" textFill="#a12e2e">
+         <font>
+            <Font name="FreeSerif Bold" size="18.0" />
+         </font>
+      </Label>
     </children>
 </Pane>

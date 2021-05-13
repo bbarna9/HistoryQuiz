@@ -3,6 +3,9 @@ package models;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class QuestionModel {
 
     public StringProperty questionText = new SimpleStringProperty();
